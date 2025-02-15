@@ -9,8 +9,9 @@ When trying to run a console command, a sepperate instance will evaluate the com
 
 Nova is set up to work on Linux based shells. 
 
-The python virtual environment is set up to work with CUDA 12.4. This has to be installed seperately. Additionally, Python3 is required.
-All neccesary Python packages should be included in the venv and no additional installation should be required. Please open an issue, if it does not work.
+The python virtual environment is set up to work with CUDA 12.6. This has to be installed seperately. Additionally, Python3 with pip is required.
+All neccesary Python packages should be automatically installed into the venv and no additional installation should be required. 
+Please open an issue, if it does not work.
 
 The current setup is set to max out a Nvidia 3060 GPU. It is currently using a 3B parameter model. Lower parameter count models frequently struggle with tool calling.
 If you have a GPU with more VRAM, you might want to try to use the 7B or 14B Qwen model. This can be set up in the Python script.
