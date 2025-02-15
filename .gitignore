@@ -1,0 +1,8 @@
+# Ignore virtual environment directories
+venv/
+# Ignore the local files
+assistant_serapi_key.txt
+assistant.sh
+# Ignore piper
+piper*
+cori*
