@@ -34,7 +34,7 @@ working_dir=sys.argv[1]
 model_name="cori-high"
 
 engine = PiperEngine(
-    piper_path=working_dir+"/piper_amd64/piper/piper",
+    piper_path=working_dir+"/piper/piper",
     voice=PiperVoice(
         model_file=working_dir+"/"+model_name+".onnx",
         config_file=working_dir+"/"+model_name+".onnx.json",

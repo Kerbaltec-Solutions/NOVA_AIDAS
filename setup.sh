@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+wget "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/cori/high/en_GB-cori-high.onnx.json?download=true" -O cori-high.onnx.json
+wget "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/cori/high/en_GB-cori-high.onnx?download=true" -O cori-high.onnx
+wget "https://github.com/rhasspy/piper/releases/download/v1.2.0/piper_amd64.tar.gz" -O piper_amd64.tar.gz
+tar -xzf piper_amd64.tar.gz
+
 echo "[Desktop Entry]
 Type=Application
 Terminal=true
