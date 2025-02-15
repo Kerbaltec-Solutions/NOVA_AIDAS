@@ -5,14 +5,6 @@ Nova runs entirely locally and will not send any data to third party servers (un
 Nova unloads the model from GPU when not in use to allow for background use.
 When trying to run a console command, a sepperate instance will evaluate the command and the user is prompted to decide, if the command should be executed. (Read more in the AI safety section)
 
-**Capabilities**
-
-Nova has told to do the following:
-- Run commands in the console (each command has to be allowed by the user)
-- Type text (basically emulating keyboard input)
-- Access Wikipedia articles 
-- Use SerAPI to search for websites on Google and scrape the content of those pages (needs SerAPI key)
-
 **Dependancies**
 
 Nova is set up to work on Linux based shells. 
@@ -56,3 +48,4 @@ However, to avoid the "AI-Apocalypse", you should keep certain safeguards in ord
 In the case of this program, this means, that the AI can not execute any console command without the user allowing it.
 This disables the AI from performing any action in the real world. 
 Allways double check, if the command should be run. Make shure, that it poses no risk.
+
