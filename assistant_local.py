@@ -18,18 +18,19 @@ import tkinter as tk
 from tkinter.messagebox import askyesno
 import string
 import serpapi
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
-import re
-import gc
-import torch
 from RealtimeSTT import AudioToTextRecorder
 from RealtimeTTS import TextToAudioStream, PiperEngine, PiperVoice
+import ollama
 
 # Initialize LM Studio client
-model_name_or_path = "Qwen/Qwen2.5-3B-Instruct"
+model_name_or_path = "qwen2.5:7b"
+
 USER="User"
 
-working_dir=sys.argv[1]
+try:
+    working_dir=sys.argv[1]
+except:
+    working_dir="."
 
 model_name="cori-high"
 
@@ -50,8 +51,6 @@ webtool=False
 short_answer=True
 stream = TextToAudioStream(engine, language = "en", level=logging.FATAL, frames_per_buffer=1000)
 alnum = set(string.ascii_letters + string.digits)
-
-tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
 
 try:
     with open("./assistant_serapi_key.txt", "r") as f:
@@ -89,12 +88,7 @@ def message(input, _=""):
 
     messages.append({"role": "user", "content": user_input})
 
-    global model
-    model = AutoModelForCausalLM.from_pretrained(model_name_or_path, device_map="auto", torch_dtype=torch.float16, quantization_config = BitsAndBytesConfig(load_in_8bit=True), attn_implementation="flash_attention_2")
     res=generate_response()
-    del model
-    gc.collect()
-    torch.cuda.empty_cache()
 
     return(res)
 
@@ -139,30 +133,6 @@ def input(prompt="", overwrite=False):
         builtins.print("\033[1m\033[92m⚡ synthesizing\033[0m → \'"+text+"\'")
         return(text)
 
-def try_parse_tool_calls(content: str):
-    """Try parse the tool calls."""
-    tool_calls = []
-    offset = 0
-    for i, m in enumerate(re.finditer(r"<tool_call>\n(.+)?\n</tool_call>", content)):
-        if i == 0:
-            offset = m.start()
-        try:
-            func = json.loads(m.group(1))
-            tool_calls.append({"type": "function", "function": func})
-            if isinstance(func["arguments"], str):
-                func["arguments"] = json.loads(func["arguments"])
-        except json.JSONDecodeError as e:
-            print(f"Failed to parse tool calls: the content is {m.group(1)} and {e}")
-            pass
-    if tool_calls:
-        if offset > 0 and content[:offset].strip():
-            c = content[:offset]
-        else: 
-            c = ""
-        return {"role": "assistant", "content": c, "tool_calls": tool_calls}
-    return {"role": "assistant", "content": re.sub(r"<\|im_end\|>$", "", content)}
-
-
 def run_console_command(command: str) -> dict:
     command=command.replace('\\n', '\n').replace('\\t', '\t').replace('\\','')
     terminal_width = shutil.get_terminal_size().columns
@@ -182,12 +152,14 @@ def run_console_command(command: str) -> dict:
         ]
         messages_eval.append({"role": "user", "content": command})
         with Spinner("Interpreting..."):
-            text = tokenizer.apply_chat_template(messages_eval, add_generation_prompt=True, tokenize=False)
-            inputs = tokenizer(text, return_tensors="pt").to(model.device)
-            outputs = model.generate(**inputs, max_new_tokens=512)
-            response = tokenizer.batch_decode(outputs)[0][len(text):]
-            response = re.sub(r"<\|im_end\|>$", "", response)
-        if askyesno("Confirm command execution", command+"\n\n"+response):
+            with Spinner("Thinking..."):
+            #text = tokenizer.apply_chat_template(messages_a, tools=tools, add_generation_prompt=True, tokenize=False)
+                response = ollama.chat(
+                    model= model_name_or_path,
+                    messages= messages_eval,
+                    keep_alive= 0,
+                )
+        if askyesno("Confirm command execution", command+"\n\n"+response.message.content):
             e=1
         else:
             e=0       
@@ -481,9 +453,7 @@ def get_function_by_name(fn_name):
 
 def call_tools(fn_name, fn_args):
 
-        args = fn_args
-
-        result = get_function_by_name(fn_name)(**args)
+        result = get_function_by_name(fn_name)(**fn_args)
 
         # Print the Wikipedia content in a formatted way
         if result["status"] == "success":
@@ -512,21 +482,19 @@ def generate_response():
         tools=[CONSOLE_TOOL,WIKI_TOOL,TEXT_TOOL]
     try:
         with Spinner("Thinking..."):
-            text = tokenizer.apply_chat_template(messages_a, tools=tools, add_generation_prompt=True, tokenize=False)
-            inputs = tokenizer(text, return_tensors="pt").to(model.device)
-            outputs = model.generate(**inputs, max_new_tokens=512)
-            response = tokenizer.batch_decode(outputs)[0][len(text):]
-            messages.append(try_parse_tool_calls(response))
+            #text = tokenizer.apply_chat_template(messages_a, tools=tools, add_generation_prompt=True, tokenize=False)
+            response = ollama.chat(
+                model= model_name_or_path,
+                messages= messages_a,
+                tools= tools,
+                keep_alive= 0,
+            )
+            messages.append({"role": "assistant", "content": response.message.content})
 
-        if tool_calls := messages[-1].get("tool_calls", None):
-            # Handle all tool calls
-            for tool_call in tool_calls:
-                if fn_call := tool_call.get("function"):
-                    fn_name: str = fn_call["name"]
-                    fn_args: dict = fn_call["arguments"]
-                    call_tools(fn_name,fn_args)
-
-            # Stream the post-tool-call response
+        if response.message.tool_calls:
+            # Handle tool calls
+            for tool in response.message.tool_calls:
+                call_tools(tool.function.name, tool.function.arguments)
             return(generate_response())
             
         else:
@@ -733,6 +701,10 @@ def async_task():
             app.update_text()
 
 def chat_loop():
+
+    subprocess.Popen("ollama serve", stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, shell=True)
+    subprocess.Popen("ollama run "+model_name_or_path, shell=True)
+
     listener = keyboard.Listener(on_release=on_release)
     listener.start()
     

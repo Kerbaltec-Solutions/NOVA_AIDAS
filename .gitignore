@@ -6,3 +6,5 @@ assistant.sh
 # Ignore piper
 piper*
 cori*
+#ignore Modelfile
+Modelfile
