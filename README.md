@@ -1,11 +1,11 @@
-***Welcome to Nova-AIDAS (Nova-Artificial Intelligence Diagnosis and Assistance System)***
+# Welcome to Nova-AIDAS (Nova-Artificial Intelligence Diagnosis and Assistance System)
 
 Nova is based upon Qwen2.5-Instruct and set up to run console commands and look up information from the internet. 
 Nova runs entirely locally and will not send any data to third party servers (unless you want to access the internet)
 Nova unloads the model from GPU when not in use to allow for background use.
 When trying to run a console command, a sepperate instance will evaluate the command and the user is prompted to decide, if the command should be executed. (Read more in the AI safety section)
 
-**Dependancies**
+# Dependancies
 
 Nova is set up to work on Linux based shells. 
 
@@ -18,7 +18,7 @@ The current setup is currently using a 7B parameter model.
 If you have a GPU with less VRAM, you might want to try to use the 3B Qwen model. This can be set up in the Python script.
 If you have a GPU with more VRAM, you might want to try to use the 14B Qwen model. This can be set up in the Python script.
 
-**Setup**
+# Setup
 
 After downloading all files, unpack them in the place, where they can reside.
 Then, inside the "NOVA_AIDAS" folder run the setup.sh file. This will create a desktop shortcut and a launchfile.
@@ -26,7 +26,8 @@ Also, you may want to open the assistant_local.py file and change the "USER" var
 If you would like Nova to have the ability to search the web beyond just Wikipedia, you can create the file "assistant_serapi_key.txt" and insert your personal serapi key into it.
 You can now start the assistant via the assistant.sh file or via the desktop shortcut.
 
-**Useage**
+# Useage
+
 After starting the program, two windows will open: A console window, which is there for debugging and a main window. (Give it some seconds)
 In the main window, you will find (from top to bottom, left to right):
 The chat window: Shows the past chat. Do not type in here.
@@ -45,7 +46,8 @@ Note: When in voice mode, the chat window will only update after the voice outpu
 Note: You can also use a middle mouse button click on the main window to activate the single shot voice input.
 Note: The programm will listen to the "Page-Up" key to shut down the voice output immediately and the "Page-Down" key to activate the single shot voice input. This works in the background too.
 
-**AI safety**
+# AI safety
+
 This program is distributed as open source. As such i do not have any influence on what you do with it.
 However, to avoid the "AI-Apocalypse", you should keep certain safeguards in order.
 In the case of this program, this means, that the AI can not execute any console command without the user allowing it.
