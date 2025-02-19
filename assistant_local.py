@@ -25,7 +25,7 @@ import ollama
 # Initialize LM Studio client
 model_name_or_path = "qwen2.5:7b"
 
-USER="User"
+USER="Björn"
 
 try:
     working_dir=sys.argv[1]
