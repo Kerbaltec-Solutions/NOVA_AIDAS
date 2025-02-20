@@ -79,4 +79,9 @@ PRIMER = [
 
 chmod +x ./assistant.sh
 
+ollama serve &
+sleep 2
+ollama pull "$var_model"
+kill %1
+
 echo "NOVA is installed and ready to launch."

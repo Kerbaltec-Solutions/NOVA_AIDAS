@@ -14,7 +14,7 @@ import text_tools
 import settings
 
 if settings.SERP_KEY!="":
-    serp = serpapi.Client(settings.SERP_KEY)
+    serp = serpapi.Client(api_key=settings.SERP_KEY)
 
 def get_tools():
     if settings.SERP_KEY!="":
