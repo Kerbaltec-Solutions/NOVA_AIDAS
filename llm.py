@@ -8,7 +8,6 @@ class LLM:
     short_answer = True
     primer = settings.PRIMER
     messages = primer
-    model_name_or_path = settings.LLM_MODEL
 
     def call_tools(self, fn_name, fn_args):
 
@@ -38,7 +37,7 @@ class LLM:
         with spinner.Spinner("Thinking..."):
             #text = tokenizer.apply_chat_template(messages_a, tools=tools, add_generation_prompt=True, tokenize=False)
             response = ollama.chat(
-                model= self.model_name_or_path,
+                model= settings.LLM_MODEL,
                 messages= messages_a,
                 tools= tools.get_tools(),
                 keep_alive= 0,

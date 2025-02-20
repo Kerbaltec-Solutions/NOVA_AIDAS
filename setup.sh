@@ -21,7 +21,7 @@ if [ ! -d "piper" ] || [ "$reinstall" == "y" ] || [ "$reinstall" == "Y" ]; then
     rm -f piper_amd64.tar.gz
 fi
 
-if [ ! $(which olama) ] || [ "$reinstall" == "y" ] || [ "$reinstall" == "Y" ]; then
+if [ ! $(which ollama) ] || [ "$reinstall" == "y" ] || [ "$reinstall" == "Y" ]; then
     curl -fsSL https://ollama.com/install.sh | sh
 fi
 
@@ -41,8 +41,9 @@ Exec="$PWD"/assistant.sh" > ~/.local/share/applications/NOVA.desktop
 
 echo "#!/usr/bin/env bash
 
-source "$PWD"/venv/bin/activate
-python3 "$PWD"/assistant_local.py" > ./assistant.sh
+cd "$PWD"
+source ./venv/bin/activate
+python3 ./assistant_local.py" > ./assistant.sh
 
 var_name="User"
 read -p "Please input your name [User]: " var_name
@@ -55,8 +56,6 @@ read -p "Please input your serpapi key, if you have one, otherwise hit enter: " 
 
 echo "LLM_MODEL = '"$var_model"'
 USER = '"$var_name"'
-
-WORKINGDIR = '"$PWD"'
 SERP_KEY = '"$var_key"'
 
 PRIMER = [
