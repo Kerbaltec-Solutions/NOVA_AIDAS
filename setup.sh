@@ -3,14 +3,23 @@
 if [ ! -d "venv" ]; then
     python3 -m venv venv
 fi
+
 source venv/bin/activate
-which pip
 pip install -r requirements.txt
 
-wget "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/cori/high/en_GB-cori-high.onnx.json?download=true" -O cori-high.onnx.json
-wget "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/cori/high/en_GB-cori-high.onnx?download=true" -O cori-high.onnx
-wget "https://github.com/rhasspy/piper/releases/download/v1.2.0/piper_amd64.tar.gz" -O piper_amd64.tar.gz
-tar -xzf piper_amd64.tar.gz
+reinstall="n"
+read -p "Reinstall dependancies? (y/n) [n] " reinstall
+
+if [ ! -f "cori-high.onnx" ] || [ ! -f "cori-high.onnx.json" ] || [ "$reinstall" == "y" ] || [ "$reinstall" == "Y" ]; then
+    wget "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/cori/high/en_GB-cori-high.onnx.json?download=true" -O cori-high.onnx.json
+    wget "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/cori/high/en_GB-cori-high.onnx?download=true" -O cori-high.onnx
+fi
+
+if [ ! -d "piper" ] || [ "$reinstall" == "y" ] || [ "$reinstall" == "Y" ]; then
+    wget "https://github.com/rhasspy/piper/releases/download/v1.2.0/piper_amd64.tar.gz" -O piper_amd64.tar.gz
+    tar -xzf piper_amd64.tar.gz
+    rm -f piper_amd64.tar.gz
+fi
 
 echo "[Desktop Entry]
 Type=Application
