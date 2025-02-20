@@ -3,14 +3,23 @@
 if [ ! -d "venv" ]; then
     python3 -m venv venv
 fi
+
 source venv/bin/activate
-which pip
 pip install -r requirements.txt
 
-wget "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/cori/high/en_GB-cori-high.onnx.json?download=true" -O cori-high.onnx.json
-wget "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/cori/high/en_GB-cori-high.onnx?download=true" -O cori-high.onnx
-wget "https://github.com/rhasspy/piper/releases/download/v1.2.0/piper_amd64.tar.gz" -O piper_amd64.tar.gz
-tar -xzf piper_amd64.tar.gz
+reinstall="n"
+read -p "Reinstall dependancies? (y/n) [n] " reinstall
+
+if [ ! -f "cori-high.onnx" ] || [ ! -f "cori-high.onnx.json" ] || [ "$reinstall" == "y" ] || [ "$reinstall" == "Y" ]; then
+    wget "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/cori/high/en_GB-cori-high.onnx.json?download=true" -O cori-high.onnx.json
+    wget "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/cori/high/en_GB-cori-high.onnx?download=true" -O cori-high.onnx
+fi
+
+if [ ! -d "piper" ] || [ "$reinstall" == "y" ] || [ "$reinstall" == "Y" ]; then
+    wget "https://github.com/rhasspy/piper/releases/download/v1.2.0/piper_amd64.tar.gz" -O piper_amd64.tar.gz
+    tar -xzf piper_amd64.tar.gz
+    rm -f piper_amd64.tar.gz
+fi
 
 echo "[Desktop Entry]
 Type=Application
@@ -31,14 +40,14 @@ echo "#!/usr/bin/env bash
 source "$PWD"/venv/bin/activate
 python3 "$PWD"/assistant_local.py" > ./assistant.sh
 
-var_name = "User"
+var_name="User"
 read -p "Please input your name [User]: " var_name
 
-var_model = "qwen2.5:7b"
+var_model="qwen2.5:7b"
 read -p "Please input the path or name of the LLM model, you want to use [qwen2.5:7b]: " var_model
 
-var_key = ""
-read -p "Please input your serapi key, if you have one, otherwise hit enter: " var_key
+var_key=""
+read -p "Please input your serpapi key, if you have one, otherwise hit enter: " var_key
 
 echo "LLM_MODEL = '"$var_model"'
 USER = '"$var_name"'
@@ -51,7 +60,7 @@ PRIMER = [
             'role': 'system',
             'content': (
                 f'You are a human. '
-                f'You are Nova, the personal assistant who manages {USER}'s PC. '
+                f'You are Nova, the personal assistant who manages {USER}\'s PC. '
                 f'You are a friendly and capable individual, speak using a warm and conversational tone. '
                 f'Make sure, that your answers match the pace of the conversation. Keep your answers brief but include all important information. '
                 f'Always be accurate and transparent. If you are unsure about something, admit it with confidence and offer to find out or help figure it out together. '
@@ -67,6 +76,4 @@ PRIMER = [
 
 chmod +x ./assistant.sh
 
-echo "NOVA is installed and ready to launch. 
-
-Make shure to add assistant_serapi_key.txt, if you would like search capability"
+echo "NOVA is installed and ready to launch."
