@@ -21,7 +21,7 @@ if [ ! -d "piper" ] || [ "$reinstall" == "y" ] || [ "$reinstall" == "Y" ]; then
     rm -f piper_amd64.tar.gz
 fi
 
-if [ ! $(which olama) ] || [ "$reinstall" == "y" ] || [ "$reinstall" == "Y" ]; then
+if [ ! $(which ollama) ] || [ "$reinstall" == "y" ] || [ "$reinstall" == "Y" ]; then
     curl -fsSL https://ollama.com/install.sh | sh
 fi
 
