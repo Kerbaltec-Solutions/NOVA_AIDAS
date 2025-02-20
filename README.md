@@ -22,25 +22,25 @@ If you have a GPU with more VRAM, you might want to try to use the 14B Qwen mode
 
 After downloading all files, unpack them in the place, where they can reside.
 Then, inside the "NOVA_AIDAS" folder run the setup.sh file. This will create a desktop shortcut and a launchfile.
-Also, you may want to open the assistant_local.py file and change the "USER" variable, to contain your name.
-If you would like Nova to have the ability to search the web beyond just Wikipedia, you can create the file "assistant_serapi_key.txt" and insert your personal serapi key into it.
+If you would like Nova to have the ability to search the web beyond just Wikipedia, you can add a serapi key during setup.
 You can now start the assistant via the assistant.sh file or via the desktop shortcut.
 
 # Useage
 
 After starting the program, two windows will open: A console window, which is there for debugging and a main window. (Give it some seconds)
 In the main window, you will find (from top to bottom, left to right):
-The chat window: Shows the past chat. Do not type in here.
-The Input window: Type your message in here (Confirm with ENTER) 
-Submit Button: Submit your message (alternative to ENTER)
-Mode Button: Switch between Text only and TTS output
-Short Button: Adds extra commands to the ai, in order to keep messages short. Good for conversational use, disable, if you want detailed explanations.
-Listen Button: Set the AI to continuously listen for user voice input.
-Voice Button: Single shot voice input.
-Load Button: Load chatlog from defined log file
-Save Button: Save chatlog to defined log file
-Log file name input: Name of the log file to save/load to/from
-Clear button: Wipes chat, to remove all context from the AI
+
+- The chat window: Shows the past chat. Do not type in here.
+- The Input window: Type your message in here (Confirm with ENTER) 
+- Submit Button: Submit your message (alternative to ENTER)
+- Mode Button: Switch between Text only and TTS output
+- Short Button: Adds extra commands to the ai, in order to keep messages short. Good for conversational use, disable, if you want detailed explanations.
+- Listen Button: Set the AI to continuously listen for user voice input.
+- Voice Button: Single shot voice input.
+- Load Button: Load chatlog from defined log file
+- Save Button: Save chatlog to defined log file
+- Log file name input: Name of the log file to save/load to/from
+- Clear button: Wipes chat, to remove all context from the AI
 
 Note: When in voice mode, the chat window will only update after the voice output has completed.
 Note: You can also use a middle mouse button click on the main window to activate the single shot voice input.
