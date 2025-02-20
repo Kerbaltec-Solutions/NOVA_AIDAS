@@ -9,9 +9,10 @@ When trying to run a console command, a sepperate instance will evaluate the com
 
 Nova is set up to work on Linux based shells. 
 
-The python virtual environment is set up to work with CUDA 12.6. This has to be installed seperately. Additionally, Python3 with pip is required.
-For the Ollama-version, Ollama has to be installed.
-All neccesary Python packages should be automatically installed into the venv and no additional installation should be required. 
+- Python 3
+- Ollama (installed automatically during setup)
+
+All neccesary Python packages should be automatically installed into a virtual enviroment and no additional installation should be required. 
 Please open an issue, if it does not work.
 
 The current setup is currently using a 7B parameter model. 
