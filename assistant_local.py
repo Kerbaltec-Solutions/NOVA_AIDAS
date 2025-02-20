@@ -16,16 +16,13 @@ import ui_app
 # Initialize LM Studio client
 model_name_or_path = settings.LLM_MODEL
 
-working_dir=settings.WORKINGDIR
-
 model_name="cori-high"
 
-
 engine = PiperEngine(
-    piper_path=working_dir+"/piper/piper",
+    piper_path="./piper/piper",
     voice=PiperVoice(
-        model_file=working_dir+"/"+model_name+".onnx",
-        config_file=working_dir+"/"+model_name+".onnx.json",
+        model_file="./"+model_name+".onnx",
+        config_file="./"+model_name+".onnx.json",
     )
 )
 
