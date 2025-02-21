@@ -2,8 +2,10 @@
 venv/
 # Ignore the local files
 settings.py
+source.html
+*.bin
+Modelfile
+__pycache__
 # Ignore piper
 piper*
 cori*
-#ignore Modelfile
-Modelfile
