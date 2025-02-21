@@ -243,36 +243,37 @@ def fetch_wikipedia_content(search_query: str) -> dict:
 def fetch_website(query:str) -> dict:
     print("Getting page for "+query)
 
-    url=serp.search(q=query, engine="google", hl="en", gl="us")["organic_results"][0]["link"]
-    
-    try:
-        fp = urllib.request.urlopen(url.replace(" ","_"))
-        mybytes = fp.read()
-        page_source = mybytes.decode("utf8")
-        head=text_tools.get_between(page_source,"<title>","</title>")
-        body=text_tools.get_between(page_source,"<body>","</body>")
-        body=text_tools.unempty(body)
-        body=body.replace('\\"','~dnr~')
-        body=body.replace('</tr>','~nl~')
-        body=body.replace('<br>','~nl~')
-        body=text_tools.remove_between(body,'<{"','}>"')
-        body=body.replace('~dnr~','"')
-        body=' '.join(body.split())
-        body=body.replace('.','.\n')
-        body=text_tools.unempty(body)
-        with open("./source.html","w") as f:
-            f.write("Head:\n")
-            f.write(head)
-            f.write("\nBody\n")
-            f.write(body)
-        
-        resp={"status": "success","query": query, "page_url": url, "page_title": head, "page_body": body}
-        
-        return (resp)
-    except Exception as e:
-        # Close the WebDriver
-        print(e)
-        return {"status": "error", "message": str(e)}
+    results=serp.search(q=query, engine="google", hl="en", gl="us")["organic_results"]
+    for result in results:
+        url = result["link"]
+        try:
+            fp = urllib.request.urlopen(url.replace(" ","_"))
+            mybytes = fp.read()
+            page_source = mybytes.decode("utf8")
+            head=text_tools.get_between(page_source,"<title>","</title>")
+            body=text_tools.get_between(page_source,"<body>","</body>")
+            body=text_tools.unempty(body)
+            body=body.replace('\\"','~dnr~')
+            body=body.replace('</tr>','~nl~')
+            body=body.replace('<br>','~nl~')
+            body=text_tools.remove_between(body,'<{"','}>"')
+            body=body.replace('~dnr~','"')
+            body=' '.join(body.split())
+            body=body.replace('.','.\n')
+            body=text_tools.unempty(body)
+            with open("./source.html","w") as f:
+                f.write("Head:\n")
+                f.write(head)
+                f.write("\nBody\n")
+                f.write(body)
+            
+            resp={"status": "success","query": query, "page_url": url, "page_title": head, "page_body": body}
+            
+            return (resp)
+        except Exception as e:
+            # Close the WebDriver
+            print(e)
+    return {"status": "error", "message": "no matching webpages were found"}
         
 def type_text(text:str) -> dict:
 
