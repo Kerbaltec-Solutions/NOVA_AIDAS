@@ -80,8 +80,9 @@ PRIMER = [
 chmod +x ./assistant.sh
 
 ollama serve &
-sleep 2
+service_pid=$!
+sleep 2  # Optionally, replace with a readiness-check loop
 ollama pull "$var_model"
-kill %1
+kill $service_pid
 
 echo "NOVA is installed and ready to launch."
