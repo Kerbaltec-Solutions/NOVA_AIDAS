@@ -7,8 +7,8 @@ fi
 source venv/bin/activate
 pip install -r requirements.txt
 
-reinstall="n"
 read -p "Reinstall dependancies? (y/n) [n] " reinstall
+reinstall=${reinstall:-"n"}
 
 if [ ! -f "cori-high.onnx" ] || [ ! -f "cori-high.onnx.json" ] || [ "$reinstall" == "y" ] || [ "$reinstall" == "Y" ]; then
     wget "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/cori/high/en_GB-cori-high.onnx.json?download=true" -O cori-high.onnx.json
@@ -45,13 +45,12 @@ cd "$PWD"
 source ./venv/bin/activate
 python3 ./assistant_local.py" > ./assistant.sh
 
-var_name="User"
 read -p "Please input your name [User]: " var_name
+var_name=${var_name:-"User"}
 
-var_model="qwen2.5:7b"
 read -p "Please input the path or name of the LLM model, you want to use [qwen2.5:7b]: " var_model
+var_model=${var_model:-"qwen2.5:7b"}
 
-var_key=""
 read -p "Please input your serpapi key, if you have one, otherwise hit enter: " var_key
 
 echo "LLM_MODEL = '"$var_model"'
