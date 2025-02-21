@@ -1,57 +1,57 @@
-# Welcome to Nova-AIDAS (Nova-Artificial Intelligence Diagnosis and Assistance System)
+# Nova-AIDAS (Nova-Artificial Intelligence Diagnosis and Assistance System)
 
-Nova is based upon Qwen2.5-Instruct and set up to run console commands and look up information from the internet. 
-Nova runs entirely locally and will not send any data to third party servers (unless you want to access the internet)
-Nova unloads the model from GPU when not in use to allow for background use.
-When trying to run a console command, a sepperate instance will evaluate the command and the user is prompted to decide, if the command should be executed. (Read more in the AI safety section)
+Nova-AIDAS is based on Qwen2.5-Instruct and is designed to run console commands and look up information from the internet. 
+Nova operates entirely locally and does not send any data to third-party servers unless you choose to access the internet. 
+It unloads the model from the GPU when not in use to allow for background use. 
+When attempting to run a console command, a separate instance will evaluate the command, and the user is prompted to decide if the command should be executed. (Read more in the AI safety section)
 
-# Dependancies
+## Dependencies
 
-Nova is set up to work on Linux based shells. 
+Nova is designed to work on Linux-based shells. The following dependencies are required:
 
 - Python 3
 - Ollama (installed automatically during setup)
 
-All neccesary Python packages should be automatically installed into a virtual enviroment and no additional installation should be required. 
-Please open an issue, if it does not work.
+All necessary Python packages should be automatically installed into a virtual environment. If you encounter any issues, please open an issue.
 
-The current setup is currently using a 7B parameter model. 
-If you have a GPU with less VRAM, you might want to try to use the 3B Qwen model. This can be set up in the Python script.
-If you have a GPU with more VRAM, you might want to try to use the 14B Qwen model. This can be set up in the Python script.
+The current setup uses a 7B parameter model. If you have a GPU with less VRAM, you might want to use the 3B Qwen model. This can be configured in the Python script. If you have a GPU with more VRAM, you might want to use the 14B Qwen model. This can also be configured in the Python script.
 
-# Setup
+## Setup
 
-After downloading all files, unpack them in the place, where they can reside.
-Then, inside the "NOVA_AIDAS" folder run the setup.sh file. This will create a desktop shortcut and a launchfile.
-If you would like Nova to have the ability to search the web beyond just Wikipedia, you can add a serapi key during setup.
-You can now start the assistant via the assistant.sh file or via the desktop shortcut.
+1. Download all files and unpack them in a suitable location. 
+   - `git clone https://github.com/Kerbaltec-Solutions/NOVA_AIDAS.git`
+2. Move into the `NOVA_AIDAS` folder  
+   - `cd NOVA_AIDAS`
+3. If you would like Nova to have the ability to search the web beyond just Wikipedia, create on at their Webpage and add it during setup. 
+4. Inside the "NOVA_AIDAS" folder, run the `setup.sh` file. This will create a desktop shortcut and a launch file.
+   - `./setup.sh`
+5. You can now start the assistant via the `assistant.sh` file or the desktop shortcut.
+   - `./assistant.sh`
 
-# Useage
+## Usage
 
-After starting the program, two windows will open: A console window, which is there for debugging and a main window. (Give it some seconds)
+After starting the program, two windows will open: a console window for debugging and a main window. (Give it a few seconds)
+
 In the main window, you will find (from top to bottom, left to right):
 
-- The chat window: Shows the past chat. Do not type in here.
-- The Input window: Type your message in here (Confirm with ENTER) 
-- Submit Button: Submit your message (alternative to ENTER)
-- Mode Button: Switch between Text only and TTS output
-- Short Button: Adds extra commands to the ai, in order to keep messages short. Good for conversational use, disable, if you want detailed explanations.
-- Listen Button: Set the AI to continuously listen for user voice input.
-- Voice Button: Single shot voice input.
-- Load Button: Load chatlog from defined log file
-- Save Button: Save chatlog to defined log file
-- Log file name input: Name of the log file to save/load to/from
-- Clear button: Wipes chat, to remove all context from the AI
+- **Chat Window**: Shows the past chat. Do not type in here.
+- **Input Window**: Type your message here (Confirm with ENTER).
+- **Submit Button**: Submit your message (alternative to ENTER).
+- **Mode Button**: Switch between text-only and TTS output.
+- **Short Button**: Adds extra commands to the AI to keep messages short. Good for conversational use; disable if you want detailed explanations.
+- **Listen Button**: Set the AI to continuously listen for user voice input.
+- **Voice Button**: Single-shot voice input.
+- **Load Button**: Load chat log from the defined log file.
+- **Save Button**: Save chat log to the defined log file.
+- **Log File Name Input**: Name of the log file to save/load to/from.
+- **Clear Button**: Wipes chat to remove all context from the AI.
 
-Note: When in voice mode, the chat window will only update after the voice output has completed.
-Note: You can also use a middle mouse button click on the main window to activate the single shot voice input.
-Note: The programm will listen to the "Page-Up" key to shut down the voice output immediately and the "Page-Down" key to activate the single shot voice input. This works in the background too.
+**Notes**:
+- When in voice mode, the chat window will only update after the voice output has completed.
+- You can also use a middle mouse button click on the main window to activate single-shot voice input.
+- The program will listen to the "Page-Up" key to shut down the voice output immediately and the "Page-Down" key to activate single-shot voice input. This works in the background too.
 
-# AI safety
+## AI Safety
 
-This program is distributed as open source. As such i do not have any influence on what you do with it.
-However, to avoid the "AI-Apocalypse", you should keep certain safeguards in order.
-In the case of this program, this means, that the AI can not execute any console command without the user allowing it.
-This disables the AI from performing any action in the real world. 
-Allways double check, if the command should be run. Make shure, that it poses no risk.
+This program is distributed as open source. As such, I do not have any influence on what you do with it. However, to avoid the "AI-Apocalypse," you should keep certain safeguards in place. In this program, the AI cannot execute any console command without the user's permission. This prevents the AI from performing any action in the real world. Always double-check if the command should be run and ensure it poses no risk.
 
