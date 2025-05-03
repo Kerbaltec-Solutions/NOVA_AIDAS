@@ -270,37 +270,77 @@ def fetch_website(query:str) -> dict:
 
                 page.wait_for_selector("body")
 
-                head_text = cleanup(page.locator("head").text_content())
+                head_text = cleanup(page.locator("head").text_content()).splitlines()[0]
                 body_text = cleanup(page.locator("body").text_content())
                 
                 browser.close()
 
-            messages_eval = [
-                {
-                    "role": "system",
-                    "content": (
-                        "You are an assistant that interprets text from a website. "
-                        "The next user message is the text that is vissible on a webpage. "
-                        "Summarize relevant information, while removing control elements, cookie forms, marketing and more. "
-                        "/no_think"
-                    ),
-                }
-            ]
-            messages_eval.append({"role": "user", "content": body_text})
-            with spinner.Spinner("Interpreting..."):
-                #text = tokenizer.apply_chat_template(messages_a, tools=tools, add_generation_prompt=True, tokenize=False)
-                response = ollama.chat(
-                    model= settings.LLM_MODEL_E,
-                    messages= messages_eval,
-                    keep_alive= 0,
-                )
-            body_summary = response.message.content.replace("<think>\n","").replace("</think>\n","")
+            lines = body_text.splitlines()
+            body_summary = ""
+            lines_per_chunk = 40
+            for i in range(0, len(lines), lines_per_chunk):
+                messages_eval = [
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are an assistant that interprets text from a website. "
+                            "The next user message is the text that is vissible on a webpage. "
+                            f"Summarize all information, that is relevant to this search-query: {query} "
+                            "Remove control elements, cookie forms, marketing and more. "
+                            "Do not state, what the website does, just extract the actual information written on the website. "
+                            "If no relevant information is in the text, say nothing. "
+                            "Keep your answer very short and conzise. "
+                            "/no_think"
+                        ),
+                    }
+                ]
+                messages_eval.append({"role": "user", "content": "\n".join(lines[i:i + lines_per_chunk])})
+                with spinner.Spinner(f"Interpreting {i}/{len(lines)} ..."):
+                    #text = tokenizer.apply_chat_template(messages_a, tools=tools, add_generation_prompt=True, tokenize=False)
+                    response = ollama.chat(
+                        model= settings.LLM_MODEL,
+                        messages= messages_eval,
+                        keep_alive= 10,
+                    )
+                body_summary += response.message.content.replace("<think>\n","").replace("</think>\n","")
+
+            lastlen = len(lines)
+            dlen = lastlen
+            
+            while dlen!=0:
+                lines = body_summary.splitlines()
+                dlen = lastlen - len(lines)
+                lastlen = len(lines)
+                body_summary = ""
+                lines_per_chunk = 40
+                for i in range(0, len(lines), lines_per_chunk):
+                    messages_eval = [
+                        {
+                            "role": "system",
+                            "content": (
+                                "You are an assistant that interprets text from a website. "
+                                "The next user message is the text that is vissible on a webpage. "
+                                "Keep your answer short and conzise. "
+                                f"Summarize all information, that is relevant to this search-query: {query} "
+                                "/no_think"
+                            ),
+                        }
+                    ]
+                    messages_eval.append({"role": "user", "content": "\n".join(lines[i:i + lines_per_chunk])})
+                    with spinner.Spinner(f"Interpreting {i}/{len(lines)} ..."):
+                        #text = tokenizer.apply_chat_template(messages_a, tools=tools, add_generation_prompt=True, tokenize=False)
+                        response = ollama.chat(
+                            model= settings.LLM_MODEL,
+                            messages= messages_eval,
+                            keep_alive= 10,
+                        )
+                    body_summary += response.message.content.replace("<think>\n","").replace("</think>\n","")
 
             with open("source.html", "w") as f:
                 f.write(head_text)
                 f.write(body_summary)
 
-            resp={"status": "success","query": query, "page_url": url, "page_title": head_text, "page_body": body_summary}
+            resp={"status": "success","query": query, "page_url": url, "page_body": body_summary}
             
             return (resp)
         except Exception as e:
