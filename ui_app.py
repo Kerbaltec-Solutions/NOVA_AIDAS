@@ -1,6 +1,7 @@
 import tkinter as tk
 import settings
 import pickle
+import overwrites
 
 class Vars():
     listen=False
@@ -134,7 +135,7 @@ class App(tk.Tk):
 
     def handle_voice(self, event):
         self.voice.config(background="red")
-        inp=input(overwrite=True)
+        inp=overwrites.input(overwrite=True)
         self.log.insert(tk.END, "You: "+inp+"\n", 'user')
         self.log.insert(tk.END, "Nova: THINKING...\n", 'nova')
         self.log.see(tk.END)

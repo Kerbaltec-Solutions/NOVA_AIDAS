@@ -48,14 +48,19 @@ python3 ./assistant_local.py" > ./assistant.sh
 read -p "Please input your name [User]: " var_name
 var_name=${var_name:-"User"}
 
-read -p "Please input the path or name of the LLM model, you want to use [qwen2.5:7b]: " var_model
-var_model=${var_model:-"qwen2.5:7b"}
+read -p "Please input the path or name of the LLM model, you want to use [qwen3:14b]: " var_model
+var_model=${var_model:-"qwen3:14b"}
+read -p "Please input the path or name of the command evaluation LLM model, you want to use [$var_model]: " var_model_e
+var_model_e=${var_model_e:-"$var_model"}
 
-read -p "Please input your serpapi key, if you have one, otherwise hit enter: " var_key
+read -p "Please input your google api id, if you have one, otherwise hit enter: " var_id
+read -p "Please input your google api key, if you have one, otherwise hit enter: " var_key
 
 echo "LLM_MODEL = '"$var_model"'
+LLM_MODEL_E = '"$var_model_e"'
 USER = '"$var_name"'
-SERP_KEY = '"$var_key"'
+GOOGLE_KEY = '"$var_key"'
+GOOGLE_ID = '"$var_id"'
 
 PRIMER = [
         {
@@ -71,7 +76,9 @@ PRIMER = [
                 f'When {USER} asks you to perform actions, that you normally would not be able to, you can run commands in the command line and cite from the output. '
                 f'When {USER} asks you to run a command, you should immediately use your \'run_console_command\' tool before talking to {USER} again. '
                 f'When a command generates a long response, ask {USER}, if they would like to know the full command output and only tell {USER}, what the command output, when they ask for it. '
-                f'When {USER} asks to access information, that you normally would not be able to access, you can search Wikipedia for an appropriate article or access the content of webpages and cite from the output. '
+                f'When {USER} asks to access information, that you normally would not be able to access, you can search Wikipedia or the Internet for an appropriate article or access the content of webpages and cite from the output. '
+                f'Allways use your provided tool functions, when appropriate. '
+                f'When the user tells you that something is incorrect, correct that mistake as good as you can. '
             ),
         }
     ]" > ./settings.py

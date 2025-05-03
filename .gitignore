@@ -5,7 +5,9 @@ settings.py
 source.html
 *.bin
 Modelfile
-__pycache__
+__pycache__/
 # Ignore piper
 piper*
 cori*
+realtimesst.log
+.pytest_cache/

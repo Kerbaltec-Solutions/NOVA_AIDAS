@@ -24,3 +24,6 @@ def unempty(s:str) -> str:
         if len(set(line) & alnum) > 0:
             o+=line+"\n"
     return(o)
+
+def cleanup(s:str) -> str:
+    return "\n".join(line.strip() for line in s.splitlines() if line.strip())

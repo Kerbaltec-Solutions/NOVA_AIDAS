@@ -3,6 +3,7 @@ import ollama
 import spinner
 import tools
 import settings
+import overwrites
 
 class LLM:
     short_answer = True
@@ -33,16 +34,29 @@ class LLM:
             messages_a=self.messages+[{"role": "system", "content": "Answer as a friendly and cute woman. Answer short and precise."}]
         else:
             messages_a=self.messages+[{"role": "system", "content": "Answer as a friendly and cute woman. Answer precisely."}]
+        
+        response_text = ""
+        while True:
+            with spinner.Spinner("Thinking..."):
+                #text = tokenizer.apply_chat_template(messages_a, tools=tools, add_generation_prompt=True, tokenize=False)
+                response = ollama.chat(
+                    model= settings.LLM_MODEL,
+                    messages= messages_a,
+                    tools= tools.get_tools(),
+                    keep_alive= 0,
+                )
+                messages_a.append({"role": "assistant", "content": response.message.content})
+                response_text += response.message.content
+                print(response.message.content)
+                if "<think>" in response_text:
+                    if "</think>" in response_text:
+                        break
+                else: break
 
-        with spinner.Spinner("Thinking..."):
-            #text = tokenizer.apply_chat_template(messages_a, tools=tools, add_generation_prompt=True, tokenize=False)
-            response = ollama.chat(
-                model= settings.LLM_MODEL,
-                messages= messages_a,
-                tools= tools.get_tools(),
-                keep_alive= 0,
-            )
-            self.messages.append({"role": "assistant", "content": response.message.content})
+        if "</think>" in response_text:
+            self.messages.append({"role": "assistant", "content": response_text.split("</think>")[1]})
+        else:
+            self.messages.append({"role": "assistant", "content": response_text})
 
         if response.message.tool_calls:
             # Handle tool calls
@@ -53,7 +67,7 @@ class LLM:
         else:
             # Handle regular response
             message=self.messages[-1].get("content")
-            print(message)
+            overwrites.print(message)
             return(message)
         
     def message(self, input, _=""):
